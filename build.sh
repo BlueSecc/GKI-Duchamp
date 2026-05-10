@@ -295,7 +295,7 @@ fi
 # Declare needed variables
 export KBUILD_BUILD_USER="$USER"
 export KBUILD_BUILD_HOST="$HOST"
-export KBUILD_BUILD_TIMESTAMP=$(date)
+export KBUILD_BUILD_TIMESTAMP=$(git -C $KSRC log -1 --format=%cd --date=format-local:'%a %b %d %T %z %Y')
 export KCFLAGS="-w"
 MAKE_ARGS=(
   LLVM=1
