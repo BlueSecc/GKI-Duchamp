@@ -275,6 +275,24 @@ if [ "$KSU_COMPAT" = "true" ]; then
   VARIANT="Compat+${VARIANT}"
 fi
 
+# Inject RTL8188EUS driver (for TL-WN722N v2/v3/v4)
+log "Injecting RTL8188EUS driver (v2/v3/v4 support)"
+git clone --depth=1 https://github.com/aircrack-ng/rtl8188eus $KSRC/drivers/net/wireless/realtek/rtl8188eus
+cat >> $KSRC/drivers/net/wireless/realtek/Kconfig << 'KEOF'
+source "drivers/net/wireless/realtek/rtl8188eus/Kconfig"
+KEOF
+echo 'obj-$(CONFIG_RTL8188EU) += rtl8188eus/' >> $KSRC/drivers/net/wireless/realtek/Makefile
+
+# Inject ATH9K_HTC driver (for TL-WN722N v1 / AR9271)
+log "Injecting ATH9K_HTC driver (v1 / AR9271 support)"
+cat >> $KSRC/arch/arm64/configs/gki_defconfig << 'KEOF'
+CONFIG_ATH9K_HTC=y
+CONFIG_ATH9K_HW=y
+CONFIG_ATH9K_COMMON=y
+CONFIG_ATH_COMMON=y
+CONFIG_WLAN_VENDOR_ATH=y
+KEOF
+
 # Replace Placeholder in zip name
 AK3_ZIP_NAME=${AK3_ZIP_NAME//KVER/$LINUX_VERSION}
 AK3_ZIP_NAME=${AK3_ZIP_NAME//VARIANT/$VARIANT}
