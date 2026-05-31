@@ -278,6 +278,8 @@ fi
 # Inject RTL8188EUS driver (for TL-WN722N v2/v3/v4)
 log "Injecting RTL8188EUS driver (v2/v3/v4 support)"
 git clone --depth=1 https://github.com/aircrack-ng/rtl8188eus $KSRC/drivers/net/wireless/realtek/rtl8188eus
+# Fix deprecated Kconfig syntax for kernel 6.1
+sed -i 's/---help---/help/g' $KSRC/drivers/net/wireless/realtek/rtl8188eus/Kconfig
 cat >> $KSRC/drivers/net/wireless/realtek/Kconfig << 'KEOF'
 source "drivers/net/wireless/realtek/rtl8188eus/Kconfig"
 KEOF
